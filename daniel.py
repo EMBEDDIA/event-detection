@@ -42,7 +42,7 @@ def exploit_rstr(r,rstr, set_id_text):
         ss = rstr.global_suffix[offset_end-l:offset_end]
         s_occur = set()
     
-        for o in xrange(start_plage, start_plage+nb) :
+        for o in range(start_plage, start_plage+nb) :
             # id_str = rstr.idxString[rstr.res[o]]
             s_occur.add(rstr.idxString[rstr.res[o]])
     
