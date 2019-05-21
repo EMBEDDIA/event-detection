@@ -37,8 +37,8 @@ def prepare_infos(infos, options):
 def list_docs_not_found(missing_docs): 
     if len(missing_docs) > 0:
         path = "tmp/files_not_found"
-        print "--\n %s files not found\n"%str(len(missing_docs))
-        print "list here: %s\n--"%(path)
+        print ("--\n %s files not found\n"%str(len(missing_docs)))
+        print ("list here: %s\n--"%(path))
         write_utf8(path, "\n".join(missing_docs))
 
 # look for doc - if missing, put in list to print later
@@ -67,7 +67,7 @@ def start_detection(options):
     output_dic, resources = {}, {}
     missing_docs = []
   
-    print "\n Processing %s documents\n"%str(len(corpus_to_process))
+    print ("\n Processing %s documents\n"%str(len(corpus_to_process)))
   
     for id_file, infos in corpus_to_process.iteritems(): 
         infos["document_path"] = check_abs_path(infos["document_path"], options.corpus)
@@ -85,7 +85,7 @@ def start_detection(options):
         infos = prepare_infos(infos, options)
 
         if options.verbose:
-            print infos
+            print (infos)
 
         if infos["language"]  not in resources:
             resources[infos["language"]] = get_ressource(infos["language"], options)
@@ -100,7 +100,7 @@ def start_detection(options):
         output_dic[id_file]["is_clean"] = str(output_dic[id_file]["is_clean"])
 
         if cpt_proc%100 == 0:
-            print "%s documents processed, %s relevant"%(str(cpt_proc), str(cpt_rel))
+            print ("%s documents processed, %s relevant"%(str(cpt_proc), str(cpt_rel)))
     
         output_path = write_output(output_dic, options.corpus)
 
@@ -111,9 +111,9 @@ def start_detection(options):
 if __name__=="__main__":
     start = time.clock()
     options = get_args()
-    print options
+    print (options)
     if options.corpus==None:
-        print "Please specify a Json file (-c), see README.txt for more informations about the format. To use the default example :\n -c docs/Indonesian_GL.json"
+        print ("Please specify a Json file (-c), see README.txt for more informations about the format. To use the default example :\n -c docs/Indonesian_GL.json")
         exit()
     else:
         options.document_path ="None"
@@ -123,11 +123,11 @@ if __name__=="__main__":
         pass
     cpt_doc, cpt_rel, output_path = start_detection(options)
     end = time.clock()
-    print "%s docs proc. in %s seconds"%(str(cpt_doc), str(round(end-start, 4)))
-    print "  %s relevant documents"%(str(cpt_rel))
-    print "  Results written in %s"%output_path
+    print ("%s docs proc. in %s seconds"%(str(cpt_doc), str(round(end-start, 4))))
+    print ("  %s relevant documents"%(str(cpt_rel)))
+    print ("  Results written in %s"%output_path)
     if options.evaluate:
-        print "\nEvaluation\n :"
+        print ("\nEvaluation\n :")
         cmd = "python evaluate.py %s %s"%(options.corpus, output_path)
-        print "-->",cmd
+        print ("-->",cmd)
         os.system(cmd)

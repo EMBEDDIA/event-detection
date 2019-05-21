@@ -78,7 +78,8 @@ def filter_desc(desc, l_rsc, loc=False):
     out = []
     for ss, dis_list, distances in desc:
         for id_dis in dis_list:
-            entity_name = l_rsc[id_dis].decode("utf-8")
+            # entity_name = l_rsc[id_dis].decode("utf-8")
+            entity_name = l_rsc[id_dis]
             ratio = float(len(ss))/len(entity_name)
             
             if ss[0].lower() != entity_name[0].lower():
@@ -106,8 +107,9 @@ def get_desc(string, rsc, loc = False):
         cpt+=1
     
     for r in l_rsc:
-        rstr.add_str(r.decode("utf-8"))
-    
+        # rstr.add_str(r.decode("utf-8"))
+        rstr.add_str(r)
+
     r = rstr.go() # ???? should name different perhap
     desc = exploit_rstr(r,rstr, set_id_text)
     # res = filter_desc(desc, l_rsc, loc)
@@ -137,8 +139,8 @@ def zoning(string, options):
   
     if options.debug:
         for zone in z:
-            print re.sub("\n", "--",zone[:70])
-            print("")
+            print (re.sub("\n", "--",zone[:70]))
+            print ("")
         d = raw_input("Zoning ended, proceed to next step ?")
   
     return z
@@ -161,7 +163,7 @@ def analyze(string, ressource, options):
     
     if options.debug:
         for res in dis_infos[:10]:
-            print "  ",round(res[0], 2)," \t", res[1], "\t", res[2]
+            print ("  ",round(res[0], 2)," \t", res[1], "\t", res[2])
         d = raw_input(" first 10 entities displayed, proceed to next step ?")
     
     events = []
@@ -171,7 +173,7 @@ def analyze(string, ressource, options):
         loc_infos = get_desc(zones, ressource["locations"], True)
         
         if options.debug:
-            print loc_infos[:10]
+            print (loc_infos[:10])
 
         if len(loc_infos) == 0 or loc_infos[0][0] < 0.5:
             loc =  get_implicit_location(ressource, options)
@@ -212,14 +214,14 @@ def get_ressource(lg, o):
                 dic[rsc_type] = eval(open_utf8(path))
             except Exception as e:
                 if rsc_type in mandatory_rsc:
-                    print "\n  Problem with ressource %s :"%path
-                    print e
+                    print ("\n  Problem with ressource %s :"%path)
+                    print (e)
                     exit()
                 else:
                     dic[rsc_type] = {}
         else:
             if rsc_type in mandatory_rsc:
-                print "  Ressource '%s' not found\n ->exiting"%path
+                print ("  Ressource '%s' not found\n ->exiting"%path)
                 exit()
     
     try:
@@ -227,7 +229,7 @@ def get_ressource(lg, o):
         dic["towns"] = get_towns(path_towns)
     except:
         if o.debug:
-            print "  Non mandatory ressource '%s' not found"%path_towns
+            print ("  Non mandatory ressource '%s' not found"%path_towns)
         dic["towns"]={}
     
     return dic
@@ -269,11 +271,11 @@ def get_clean_html(o, lg_JT):
                 out+="<p>%s</p>\n"%paragraph.text
         
         if o.verbose:
-            print "-> Document cleaned"
+            print ("-> Document cleaned")
     except Exception as e:
         if o.verbose:
-            print e
-            print "** Probably Justext is missing, do 'pip install justext'"
+            print (e)
+            print ("** Probably Justext is missing, do 'pip install justext'")
         
         out = open_utf8(o.document_path)
     
@@ -313,11 +315,11 @@ def process_results(results, options):
     descriptions = eval(open_utf8("ressources/descriptions.json"))
     
     if options.debug:
-        print "-"*10, "RESULTS", "-"*10
-        print(descriptions["events"])
+        print ("-"*10, "RESULTS", "-"*10)
+        print (descriptions["events"])
         
         for event in results["events"]:
-            print("  "+" ".join(event))
+            print ("  "+" ".join(event))
     
     if "dis_infos" not in results:
         return
@@ -335,11 +337,11 @@ def process_results(results, options):
                     
                     res_filtered[info].append(elems)
                     
-                    if options.verbose==True or options.showrelevant==True:
-                        print options.document_path
-                        print(descriptions[info])
-                        print(eval(str(elems)))
-                        print("")
+                    if options.verbose or options.showrelevant:
+                        print (options.document_path)
+                        print (descriptions[info])
+                        print (eval(str(elems)))
+                        print ("")
             
             print("-"*10)
     

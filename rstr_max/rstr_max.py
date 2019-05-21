@@ -157,4 +157,4 @@ if (__name__ == '__main__') :
   r = rstr.go()
   for ((id_str, end), nb), (l, start_plage) in r.iteritems():
     ss = rstr.array_str[id_str][end-l:end]
-    print '[%s] %d'%(ss.encode('utf-8'), nb)
+    print ('[%s] %d'%(ss.encode('utf-8'), nb))
