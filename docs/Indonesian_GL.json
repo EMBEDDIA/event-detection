@@ -1,0 +1,32 @@
+{
+  "IND-test-1": {
+    "annotations": [["N", "N"]
+    ], 
+    "comment": "", 
+    "download_date": "2016-12-05", 
+    "language": "id", 
+    "source": "republika.co.id",
+    "document_path": "docs/id/dengue_FP_id", 
+    "url": "http://www.republika.co.id/berita/nasional/umum/16/11/16/ogpjhl328-bio-farma-jadi-center-of-excellence-di-bidang-vaksin"
+  }, 
+  "IND-test-2": {
+    "annotations": [["Dengue", "Indonesia"]
+    ], 
+    "comment": "", 
+    "date_collecte": "2016-12-05", 
+    "language": "id", 
+    "source": "republika.co.id",
+    "document_path": "docs/id/dengue_id", 
+    "url": "http://www.republika.co.id/berita/nasional/umum/16/11/16/ogpkum328-vaksin-dengue-buatan-indonesia-diharapkan-selesai-pada-2020"
+  },
+  "IND-test-3": {
+    "annotations": [["Demam Kongo","Spanyol", 1]
+    ], 
+    "comment": "", 
+    "date_collecte": "2016-12-05", 
+    "language": "id", 
+    "source": "sathurapan.com",
+    "document_path": "docs/id/DemamKongo", 
+    "url": "http://www.satuharapan.com/read-detail/read/demam-kongo-tewaskan-lansia-spanyol-periksa-200-warga"
+  }
+}
