@@ -150,11 +150,12 @@ class Rstr_max :
 
 if (__name__ == '__main__') :
   str1 = 'toto'
-  str1_unicode = unicode(str1,'utf-8','replace')
+  # str1_unicode = unicode(str1,'utf-8','replace')
   rstr = Rstr_max()
-  rstr.add_str(str1_unicode)
-  rstr.add_str(str1_unicode)
+  rstr.add_str(str1)
+  rstr.add_str(str1)
   r = rstr.go()
-  for ((id_str, end), nb), (l, start_plage) in r.iteritems():
+  # this part is broken, no need to fix it yet but still better if works
+  for ((id_str, end), nb), (l, start_plage) in iter(r.values()):
     ss = rstr.array_str[id_str][end-l:end]
     print ('[%s] %d'%(ss.encode('utf-8'), nb))
