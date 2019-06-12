@@ -1,4 +1,3 @@
-from daniel import process
 import glob
 import sys
 import json
@@ -6,18 +5,13 @@ import os
 import time
 import codecs
 from tools import *
-from daniel import get_ressource, process_results
+from daniel import process, get_resource, process_results
 
 # TODO: write test for these functions
 
 class Struct:
     def __init__(self, **entries):
         self.__dict__.update(entries)
-
-def open_utf8(path):
-    with codecs.open(path, "r", "utf-8") as f:
-        chaine = f.read()
-    return chaine
 
 # write result
 def write_output(output_dic, corpus_path):
@@ -28,6 +22,7 @@ def write_output(output_dic, corpus_path):
     return output_path
 
 def prepare_infos(infos, options):
+    infos["document_path"] = check_abs_path(infos["document_path"], options.corpus)
     attr = ["is_clean","ratio","verbose","debug","name_out","showrelevant"]
     for name in attr:
         infos[name] = getattr(options, name)
@@ -54,13 +49,6 @@ def check_abs_path(doc_path, corpus_path):
         doc_path = os.path.dirname(os.path.abspath(corpus_path)) + "/" + doc_path
     return doc_path
 
-def info_process(infos, resources):
-    return process(Struct(**infos), resources[infos["language"]])
-    
-def verbose_result(infos, results):
-    if Struct(**infos).verbose or Struct(**infos).showrelevant:
-        process_results(results, Struct(**infos))
-
 def start_detection(options):
     corpus_to_process = json.load(open(options.corpus))
     cpt_proc, cpt_rel = 0, 0
@@ -69,10 +57,12 @@ def start_detection(options):
   
     print ("\n Processing %s documents\n"%str(len(corpus_to_process)))
   
-    for id_file, infos in corpus_to_process.iteritems(): 
-        infos["document_path"] = check_abs_path(infos["document_path"], options.corpus)
-
-        if not look_for_doc(infos["document_path"], missing_docs):
+    for id_file, infos in corpus_to_process.items():  
+        infos = prepare_infos(infos, options)
+        
+        doc_data = Struct(**infos)
+    
+        if not look_for_doc(doc_data.document_path, missing_docs):
             continue
     
         cpt_proc += 1
@@ -82,16 +72,18 @@ def start_detection(options):
         if "annotations" in output_dic[id_file]:
             del output_dic[id_file]["annotations"]# for evaluation
     
-        infos = prepare_infos(infos, options)
-
         if options.verbose:
             print (infos)
+        
+        lg = doc_data.language
 
-        if infos["language"]  not in resources:
-            resources[infos["language"]] = get_ressource(infos["language"], options)
-    
-        results = info_process(infos, resources)
-        verbose_result(infos, results)
+        if lg not in resources:
+            resources[lg] = get_resource(lg, options)
+        
+        results = process(doc_data, resources[lg])
+       
+        if doc_data.verbose or doc_data.showrelevant:
+            process_results(results, doc_data)
 
         if "dis_infos" in results:
             cpt_rel += 1
@@ -102,7 +94,7 @@ def start_detection(options):
         if cpt_proc%100 == 0:
             print ("%s documents processed, %s relevant"%(str(cpt_proc), str(cpt_rel)))
     
-        output_path = write_output(output_dic, options.corpus)
+    output_path = write_output(output_dic, options.corpus)
 
     list_docs_not_found(missing_docs) 
 
@@ -128,6 +120,6 @@ if __name__=="__main__":
     print ("  Results written in %s"%output_path)
     if options.evaluate:
         print ("\nEvaluation\n :")
-        cmd = "python evaluate.py %s %s"%(options.corpus, output_path)
+        cmd = ("python evaluate.py %s %s"%(options.corpus, output_path))
         print ("-->",cmd)
         os.system(cmd)
