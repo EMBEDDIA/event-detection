@@ -1,0 +1,7 @@
+*.pyc
+*.out
+dataset/
+*.results
+rstr_max/__pycache__/
+tmp/files_not_found
+
