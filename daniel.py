@@ -89,7 +89,7 @@ def get_desc(string, rsc, loc = False):
     set_id_text = set()
     rstr = Rstr_max()
     cpt = 0
-    l_rsc = rsc.keys()
+    l_rsc = list(rsc.keys())
 
     for s in string:
         rstr.add_str(s)
