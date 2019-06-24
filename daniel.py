@@ -21,6 +21,8 @@ def get_normalized_pos(ss, text):
     return [float(x)/len(text) for x in l_dist]
 # ???
 
+# check for bottle-neck
+#TODO: looks kinda complicated, will check again 
 def exploit_rstr(r,rstr, set_id_text):
     desc = []
     # if paragraph structure is weak
@@ -65,11 +67,30 @@ def get_score(ratio, dist):
     else:
         return pow(ratio, 1+dist[0]*math.log(dist[1]))
 
+# TODO: for later uses
+# def substring_score(entity_name, ss, distances, loc):
+#     ratio = float(len(ss))/len(entity_name)
+# 
+#     if ss[0].lower() != entity_name[0].lower():
+#         if loc:
+#             # for country names the first character should not change
+#             ration = max(0, ratio - 0.2)    #penalty
+#         else:
+#             if len(entity_name) < 6 and ratio <1:
+#                 ratio = max(0, ratio - 0.1) #penalty
+# 
+#     score = get_score(ratio, distances)
+# 
+#     return [score, entity_name, ss, distances]
+
+# check here for bottle-neck
+#TODO: try to remove nested loop later
 def filter_desc(desc, l_rsc, loc=False):
     out = []
     for ss, dis_list, distances in desc:
         for id_dis in dis_list:
             entity_name = l_rsc[id_dis]
+            print(type(entity_name))
             ratio = float(len(ss))/len(entity_name)
 
             if ss[0].lower() != entity_name[0].lower():
@@ -82,7 +103,10 @@ def filter_desc(desc, l_rsc, loc=False):
 
             score = get_score(ratio, distances)
             out.append([score, entity_name, ss, distances])
-
+        # entity_name = list(map(lambda x: l_rsc[int(x)], dis_list))
+        # test = list(map(lambda x: substring_score(x, ss, distances, loc), entity_name))
+        
+        # out.append(test)
     return sorted(out,reverse=True)
 
 def get_desc(string, rsc, loc = False):
@@ -148,7 +172,7 @@ def get_implicit_location(resource, options):
 def print_top5(res):
     for elem in res[:5]:
         print ("  ",round(elem[0], 2)," \t", elem[1], "\t", elem[2])
-
+    
 # TODO find a better way to write this
 def get_town(town_infos, loc, ratio):
     if town_infos:
