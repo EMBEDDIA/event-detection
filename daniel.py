@@ -27,7 +27,6 @@ def exploit_rstr(r,rstr, set_id_text):
     desc = []
     # if paragraph structure is weak
     weak_struct = len(set_id_text) == 1
-
     for (offset_end, nb), (l, start_plage) in r.items():
         ss = rstr.global_suffix[offset_end-l:offset_end]
         s_occur = set()
@@ -35,13 +34,12 @@ def exploit_rstr(r,rstr, set_id_text):
         for o in range(start_plage, start_plage+nb) :
             s_occur.add(rstr.idxString[rstr.res[o]])
 
-            inter = s_occur.intersection(set_id_text)
+        inter = s_occur.intersection(set_id_text)
             
-            # what is has inter???
-            has_inter = (len(inter) > 1 and len(s_occur) > len(inter))
+        # what is has inter???
+        has_inter = (len(inter) > 1 and len(s_occur) > len(inter))
 
-            weak_and_repeat = (weak_struct and 0 in s_occur) #needs to be in 1st paragraph
-
+        weak_and_repeat = (weak_struct and 0 in s_occur) #needs to be in 1st paragraph
         # ????
         if has_inter or weak_and_repeat: 
             NE_ids=[x - len(set_id_text) for x in s_occur.difference(set_id_text)]
@@ -90,7 +88,6 @@ def filter_desc(desc, l_rsc, loc=False):
     for ss, dis_list, distances in desc:
         for id_dis in dis_list:
             entity_name = l_rsc[id_dis]
-            print(type(entity_name))
             ratio = float(len(ss))/len(entity_name)
 
             if ss[0].lower() != entity_name[0].lower():
