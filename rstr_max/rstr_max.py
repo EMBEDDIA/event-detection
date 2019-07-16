@@ -156,6 +156,6 @@ if (__name__ == '__main__') :
   rstr.add_str(str1)
   r = rstr.go()
   # this part is broken, no need to fix it yet but still better if works
-  for ((id_str, end), nb), (l, start_plage) in iter(r.values()):
-    ss = rstr.array_str[id_str][end-l:end]
+  for (offset_end, nb), (l, start_plage) in r.items():
+    ss = rstr.global_suffix[offset_end - l : offset_end]
     print ('[%s] %d'%(ss.encode('utf-8'), nb))
