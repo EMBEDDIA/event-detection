@@ -120,8 +120,8 @@ def open_utf8(path):
   f.close()
   return string
 
-def get_clean_html(path, language, is_clean):
-  if is_clean == True:
+def get_clean_html(path, language, isnot_clean):
+  if isnot_clean == False:
     return open_utf8(path)
   try:
     tmp = "tmp/out"
@@ -135,7 +135,7 @@ def get_clean_html(path, language, is_clean):
   return out
   
 def process(o):
-  string = get_clean_html(o.document_path, o.language, o.is_clean)
+  string = get_clean_html(o.document_path, o.language, o.isnot_clean)
   ressource = get_ressource(o.language)
   results = analyze(string, ressource, o)
   return results

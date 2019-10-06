@@ -12,21 +12,21 @@ def get_args():
   parser.add_option("-e", "--evaluate", dest="evaluate", 
                   default=False, action="store_true",      
                   help = "Perform Evaluation")
-  parser.add_option("-i", "--is_clean", dest="is_clean",
-                    action = "store_true", default=False, help="If activated, no boilerplate removal will be applied (e.g. the document will processed as it is)")
-  parser.add_option("-l", "--language", dest="language", default ="id",
+  parser.add_option("-i", "--isnot_clean", dest="isnot_clean",
+                    action = "store_true", default=False, help="If activated, boilerplate removal will be applied (e.g. the document will processed as it is)")
+  parser.add_option("-l", "--language", dest="language", default ="all",
                   help="Language to process (ISO 639 2 letters)")
   parser.add_option("-o", "--out", dest="name_out",
                     default = "test.out", help="Name of out file")
   parser.add_option("-r", "--ratio", dest="ratio", 
                   default =0.8, type="float", 
                   help="Defines the threshold for the relative size of the substrings (e.g. 0.8 meaning that substrings sharing 80% of the Named Entity will be considered.")
-  parser.add_option("-v", "--verbose",
-                   action="store_true", dest="verbose", default=False,
-                   help="Show status messages to stdout")
   parser.add_option("-s", "--showrelevant",
                    action="store_true", dest="showrelevant", default=False,
                    help="Show informations on files classified as relevant")
+  parser.add_option("-v", "--verbose",
+                   action="store_true", dest="verbose", default=False,
+                   help="Show status messages to stdout")
   parser.add_option("-D", "--debug",
                    action="store_true", dest="debug", default=False,
                    help="print debug information")

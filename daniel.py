@@ -273,7 +273,7 @@ def get_lg_JT(lg_iso):
     return lg
 
 def get_clean_html(o, lg_JT):
-    if o.is_clean:
+    if o.isnot_clean == False:
         return open_utf8(o.document_path)
 
     try:

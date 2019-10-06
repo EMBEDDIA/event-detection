@@ -23,7 +23,7 @@ def write_output(output_dic, corpus_path):
 
 def prepare_infos(infos, options):
     infos["document_path"] = check_abs_path(infos["document_path"], options.corpus)
-    attr = ["is_clean","ratio","verbose","debug","name_out","showrelevant"]
+    attr = ["isnot_clean","ratio","verbose","debug","name_out","showrelevant"]
     for name in attr:
         infos[name] = getattr(options, name)
     return infos 
@@ -51,6 +51,8 @@ def check_abs_path(doc_path, corpus_path):
 
 def start_detection(options):
     corpus_to_process = json.load(open(options.corpus))
+    if options.language!="all":
+      corpus_to_process = {x:infos for x,infos in corpus_to_process.items() if infos["language"]==options.language}
     cpt_proc, cpt_rel = 0, 0
     output_dic, resources = {}, {}
     missing_docs = []
@@ -89,7 +91,7 @@ def start_detection(options):
             cpt_rel += 1
     
         output_dic[id_file]["annotations"] = results["events"]
-        output_dic[id_file]["is_clean"] = str(output_dic[id_file]["is_clean"])
+        output_dic[id_file]["isnot_clean"] = str(output_dic[id_file]["isnot_clean"])
 
         if cpt_proc%100 == 0:
             print ("%s documents processed, %s relevant"%(str(cpt_proc), str(cpt_rel)))
