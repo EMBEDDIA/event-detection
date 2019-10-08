@@ -1,10 +1,9 @@
 import re
-import sys
+import sys, os
 import json
-import os
+from collections import Counter
 
 def get_dic(path):
-  print(path)
   f = open(path)
   dic = json.load(f)
   f.close()
@@ -23,6 +22,25 @@ def get_verdict(GT, EV):
       verdict = "TN"
   return verdict
 
+def store_errors(errors, infos, verdict,annot_GT, annot_eval):
+  lg = infos["language"]
+  if verdict=="FP":
+    errors[verdict].setdefault(lg, [])
+    errors[verdict][lg].append(annot_eval)
+  elif verdict=="FN":
+    errors[verdict].setdefault(lg, [])
+    errors[verdict][lg].append(annot_GT)      
+#      os.system("gedit %s"%infos["document_path"])
+#      dd = input("Next ?")
+  return errors
+
+def show_errors(errors):
+  for typ, dic in errors.items():
+    print("****\n-%s-\n****"%typ)
+    for lg, list_errors in dic.items():
+      err = Counter(["--".join(x[:2]) for x in list_errors])
+      print("-> %s"%lg, err.most_common(5))
+
 def get_measures(dic, beta=1):
   TP, FP, FN = dic["TP"], dic["FP"] , dic["FN"]
   if TP==0:
@@ -37,24 +55,24 @@ def get_results(dic_GT, dic_eval):
   dic_results = {x:0 for x in ["TP","FP","FN","TN"]}
   dic_lg ={}
   dic_results["Missing_GT"] = []
+  errors = {"FP":{}, "FN":{}}
   for id_doc, infos in dic_eval.items():
     lg = infos["language"]
     dic_lg.setdefault(lg,{x:0 for x in ["TP","FP","FN","TN"]})
-    try:annot_eval = infos["annotations"]
+    try:annot_eval = infos["annotations"][0]
     except:continue
     if id_doc in dic_GT:
-      annot_GT = dic_GT[id_doc]["annotations"]  
+      annot_GT = dic_GT[id_doc]["annotations"][0]
       verdict = get_verdict(annot_GT, annot_eval)#TODO: add events
       dic_results[verdict]+=1
       dic_lg[lg][verdict]+=1
     else:
       dic_results["Missing_GT"].append(id_doc)
-    if verdict=="FP":
-      print(infos["language"],annot_GT, annot_eval)
-#      os.system("gedit %s"%infos["document_path"])
-#      dd = input("Next ?")
+    errors = store_errors(errors, infos, verdict,annot_GT, annot_eval)
+  show_errors(errors)
   if dic_results["TP"]+dic_results["FN"]==0:
     print("  No relevant documents in this Ground Truth")
+  print("-"*20)
   print(dic_results)
   print(get_measures(dic_results))
   print("  %s annotations missing"%str(len(dic_results["Missing_GT"])))

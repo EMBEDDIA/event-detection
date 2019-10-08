@@ -94,7 +94,8 @@ def start_detection(options):
         output_dic[id_file]["isnot_clean"] = str(output_dic[id_file]["isnot_clean"])
 
         if cpt_proc%100 == 0:
-            print ("%s documents processed, %s relevant"%(str(cpt_proc), str(cpt_rel)))
+          sys.stdout.write("\r%i processed, %i relevant"%(cpt_proc, cpt_rel))
+          #sys.stdout.flush() # if the buffer gets big, which is not the case
     
     output_path = write_output(output_dic, options.corpus)
 

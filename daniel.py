@@ -95,7 +95,6 @@ def filter_desc(desc, l_rsc, loc=False):
                     #for country names the first character should not change
                     ratio = max(0, ratio-0.2)#penalty
                 else:
-                    if len(entity_name) < 6 and ratio < 1:
                         ratio = max(0, ratio-0.1)#penalty
 
             score = get_score(ratio, distances)
