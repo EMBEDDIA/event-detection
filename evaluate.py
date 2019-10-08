@@ -44,12 +44,12 @@ def show_errors(errors):
 def get_measures(dic, beta=1):
   TP, FP, FN = dic["TP"], dic["FP"] , dic["FN"]
   if TP==0:
-    return {"Recall":0, "Precision":0, "F%s-measure"%str(beta):0}
+    return {"Recall":0, "Prec.":0, "F%s-meas."%str(beta):0}
   R = float(TP)/(TP+FN)
   P = float(TP)/(TP+FP)
   B = beta*beta
   F = (1+B)*P*R/(B*P+R)
-  return {"Recall":round(R,4), "Precision":round(P,4), "F%s-measure"%str(beta):round(F,4)}
+  return {"Recall":round(R,4), "Prec.":round(P,4), "F%s-meas."%str(beta):round(F,4)}
 
 def get_results(dic_GT, dic_eval):
   dic_results = {x:0 for x in ["TP","FP","FN","TN"]}
@@ -74,10 +74,15 @@ def get_results(dic_GT, dic_eval):
     print("  No relevant documents in this Ground Truth")
   print("-"*20)
   print(dic_results)
-  print(get_measures(dic_results))
   print("  %s annotations missing"%str(len(dic_results["Missing_GT"])))
+  global_res = get_measures(dic_results)
+  meas_names = global_res.keys()
+  measures = [str(global_res[x]) for x in meas_names]
+  print("\t"+"\t".join(meas_names))
+  print("all\t"+"\t".join(measures))
   for lg , infos in dic_lg.items():
-    print(lg, get_measures(infos))
+    measures = [str(get_measures(infos)[x]) for x in meas_names]
+    print("%s\t"%lg + "\t".join(measures))
 
 if len(sys.argv)!=3:
   print("USAGE : arg1=groundtruth file arg2 = result file")

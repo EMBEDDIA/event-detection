@@ -144,12 +144,15 @@ def zoning(string, options):
         else:#No usable structure
             part = int(len(string)/3)
             z = [string[:part], string[part:part*2], string[part*2:]] 
+    elif options.language!="zh":
+      if len(re.findall("\.[ <]", z[1]))<2:#reorganize header
+        z = [z[0], z[1]+z[2]] + z[2:]
 
     if options.debug:
         for zone in z:
-            print (re.sub("\n", "--",zone[:70]))
+            print (re.sub("\n", "***",zone[:70]))
             print("")
-        d = raw_input("Zoning ended, proceed to next step ?")
+        d = input("Zoning ended, proceed to next step ?")
 
     return z
 
@@ -336,6 +339,7 @@ def valid_result(result_size, largest_ratio, threshold_ratio):
 
 def print_final_result(options, results, descriptions):
     print (options.document_path)
+    if results =={}:return
     for info in ["dis_infos", "loc_infos"]:
         if len(results[info]) > 0:
             print (descriptions[info])

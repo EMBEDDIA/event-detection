@@ -80,7 +80,7 @@
 'Ospa wietrzna':'Chickenpox',
 'Tyfus plamisty':'Typhus',
 'Nudności':'Nausea',
-'Malaria':'Malaria',
+'malaria':'Malaria',
 'Krztusiec':'Pertussis',
 'Ospa prawdziwa':'Smallpox',
 'Choroba Heinego-Medina':'Poliomyelitis',
@@ -98,6 +98,6 @@
 'Limfocytarne zapalenie splotu naczyniówkowego i opon mózgowych':'Lymphocytic_choriomeningitis',
 'Gorączka Lassa':'Lassa_fever',
 'Kiła':'Syphilis',
-'Choroby układu oddechowego': 'respiratory disease',
+'choroby układu oddechowego': 'respiratory disease',
 'EHEC':'E.coli'
 }
