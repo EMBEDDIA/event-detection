@@ -59,7 +59,11 @@ def start_detection(options):
   
     print ("\n Processing %s documents\n"%str(len(corpus_to_process)))
   
-    for id_file, infos in corpus_to_process.items():  
+    for id_file, infos in corpus_to_process.items(): 
+
+        if options.verbose:
+            print("\n\n", infos)
+
         infos = prepare_infos(infos, options)
         
         doc_data = Struct(**infos)
@@ -73,9 +77,6 @@ def start_detection(options):
     
         if "annotations" in output_dic[id_file]:
             del output_dic[id_file]["annotations"]# for evaluation
-    
-        if options.verbose:
-            print (infos)
         
         lg = doc_data.language
 
@@ -118,7 +119,7 @@ if __name__=="__main__":
         pass
     cpt_doc, cpt_rel, output_path = start_detection(options)
     end = time.clock()
-    print ("%s docs proc. in %s seconds"%(str(cpt_doc), str(round(end-start, 4))))
+    print ("\n%s docs proc. in %s seconds"%(str(cpt_doc), str(round(end-start, 4))))
     print ("  %s relevant documents"%(str(cpt_rel)))
     print ("  Results written in %s"%output_path)
     if options.evaluate:

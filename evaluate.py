@@ -38,7 +38,7 @@ def show_errors(errors):
   for typ, dic in errors.items():
     print("****\n-%s-\n****"%typ)
     for lg, list_errors in dic.items():
-      err = Counter(["--".join(x[:2]) for x in list_errors])
+      err = Counter(["--".join(x[:1]) for x in list_errors])
       print("-> %s"%lg, err.most_common(5))
 
 def get_measures(dic, beta=1):
