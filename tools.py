@@ -1,5 +1,5 @@
 import codecs
-import re
+import re, json
 
 def get_args():
   from optparse import OptionParser
@@ -13,7 +13,7 @@ def get_args():
                   default=False, action="store_true",      
                   help = "Perform Evaluation")
   parser.add_option("-i", "--isnot_clean", dest="isnot_clean",
-                    action = "store_true", default=False, help="If activated, boilerplate removal will be applied (e.g. the document will processed as it is)")
+                    action = "store_true", default=False, help="If activated, boilerplate removal will be applied")
   parser.add_option("-l", "--language", dest="language", default ="all",
                   help="Language to process (ISO 639 2 letters)")
   parser.add_option("-o", "--out", dest="name_out",
@@ -21,12 +21,12 @@ def get_args():
   parser.add_option("-r", "--ratio", dest="ratio", 
                   default =0.8, type="float", 
                   help="Defines the threshold for the relative size of the substrings (e.g. 0.8 meaning that substrings sharing 80% of the Named Entity will be considered.")
-  parser.add_option("-s", "--showrelevant",
-                   action="store_true", dest="showrelevant", default=False,
-                   help="Show informations on files classified as relevant")
   parser.add_option("-v", "--verbose",
                    action="store_true", dest="verbose", default=False,
                    help="Show status messages to stdout")
+  parser.add_option("-s", "--showrelevant",
+                   action="store_true", dest="showrelevant", default=False,
+                   help="Show informations on files classified as relevant")
   parser.add_option("-D", "--debug",
                    action="store_true", dest="debug", default=False,
                    help="print debug information")
@@ -54,3 +54,11 @@ def write_utf8(path,out):
   w = codecs.open(path,'w','utf-8')
   w.write(out)
   w.close()
+
+def  write_output(output_dic, options, min_str=1):
+  output_path = "%s_lang=%s_minStr=%i_ratio=%s.results"%(options.corpus,options.language, min_str, str(options.ratio))
+  output_json = json.dumps(output_dic, sort_keys=True, indent=2)
+  wfi = open(output_path, "w")
+  wfi.write(output_json)
+  wfi.close()
+  return output_path

@@ -14,12 +14,12 @@ class Struct:
         self.__dict__.update(entries)
 
 # write result
-def write_output(output_dic, corpus_path):
-    output_path = "%s.results"%corpus_path
-    output_json = json.dumps(output_dic, sort_keys=True, indent=2)
-    with open(output_path, "w") as wfi:
-        wfi.write(output_json)
-    return output_path
+#def write_output(output_dic, corpus_path):
+#    output_path = "%s.results"%corpus_path
+#    output_json = json.dumps(output_dic, sort_keys=True, indent=2)
+#    with open(output_path, "w") as wfi:
+#        wfi.write(output_json)
+#    return output_path
 
 def prepare_infos(infos, options):
     infos["document_path"] = check_abs_path(infos["document_path"], options.corpus)
@@ -98,7 +98,7 @@ def start_detection(options):
           sys.stdout.write("\r%i processed, %i relevant"%(cpt_proc, cpt_rel))
           #sys.stdout.flush() # if the buffer gets big, which is not the case
     
-    output_path = write_output(output_dic, options.corpus)
+    output_path = write_output(output_dic, options)
 
     list_docs_not_found(missing_docs) 
 
