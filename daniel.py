@@ -14,19 +14,19 @@ from tools import *
 import json
 import time
 
-# ???
+## Maybe a bottle neck
+##normalizes the distance between the substring and the closest end of the text
 def get_normalized_pos(ss, text):
     l_dist = [m.start() for m in re.finditer(re.escape(ss), text)]
-    l_dist = [min(x, len(text)-x) for x in l_dist]
+#    l_dist = [min(x, len(text)-x) for x in l_dist]
     return [float(x)/len(text) for x in l_dist]
-# ???
 
 # check for bottle-neck
 #TODO: looks kinda complicated, will check again 
-def exploit_rstr(r,rstr, set_id_text):
+def exploit_rstr(r,rstr, s_id_txt):
     desc = []
     # if paragraph structure is weak
-    weak_struct = len(set_id_text) == 1
+    weak_struct = len(s_id_txt) == 1
     for (offset_end, nb), (l, start_plage) in r.items():
         ss = rstr.global_suffix[offset_end-l:offset_end]
         s_occur = set()
@@ -34,36 +34,45 @@ def exploit_rstr(r,rstr, set_id_text):
         for o in range(start_plage, start_plage+nb) :
             s_occur.add(rstr.idxString[rstr.res[o]])
 
-        inter = s_occur.intersection(set_id_text)
+        #how many repetitions in different paragraphs
+        inter = s_occur.intersection(s_id_txt)
             
-        # what is has inter???
+        #  repeated in text and present in disease list
         has_inter = (len(inter) > 1 and len(s_occur) > len(inter))
 
         weak_and_repeat = (weak_struct and 0 in s_occur) #needs to be in 1st paragraph
-        # ????
-        if has_inter or weak_and_repeat: 
-            NE_ids=[x - len(set_id_text) for x in s_occur.difference(set_id_text)]
+        # condition 1 : repetion pattern found
+        # condition 2 : weak structure, relax the constraint
+        if has_inter or weak_and_repeat:
+            NE_ids=[x - len(s_id_txt) for x in s_occur.difference(s_id_txt)]
             
             if len(inter) > 1:
-                l_dist = [min(pos, len(set_id_text) - pos - 1) for pos in inter]
-            else:
+                ## gives too much importance to the footer (noise)
+                #l_dist = [min(pos, len(s_id_txt) - pos - 1) for pos in inter]
+                l_dist= inter
+            else:# short documents
                 l_dist = get_normalized_pos(ss, rstr.global_suffix)
             
             l_dist = [round(x, 5) for x in l_dist]
             desc.append([ss, NE_ids, sorted(l_dist)])
-        # ????
-
+    # returns triplest :  substring + Named Entity ID + positions
     return desc
 
-def get_score(ratio, dist):
+def get_score(ratio, dist, s_id_txt):
     if ratio == 1:
         ratio = 0.99
-    if dist[0] == 1:
+    ## not the same score for repetitions in header, footer elsewhere
+    if dist[1]<2:#repetition in the header
+        return min(ratio +0.1, 1) #bonus
+    elif dist[0] == 0:#title + somewhere in the document
+        return min(ratio +0.05,1) #bonus
+    elif dist[0] <= 2:#header +rest
         return ratio
-    elif dist[1] <= 1:
+        #return pow(ratio, 1+dist[0]*math.log(dist[1]))
+#    elif len(s_id_txt)-1 in dist or len(s_id_txt)-2 in dist:#footer repetition
+#        return pow(ratio, 1+dist[0]*math.log(dist[1]))
+    else:#malus
         return pow(ratio, 1+dist[0]*dist[1])
-    else:
-        return pow(ratio, 1+dist[0]*math.log(dist[1]))
 
 # TODO: for later uses
 # def substring_score(entity_name, ss, distances, loc):
@@ -83,7 +92,7 @@ def get_score(ratio, dist):
 
 # check here for bottle-neck
 #TODO: try to remove nested loop later
-def filter_desc(desc, l_rsc, loc=False):
+def filter_desc(desc, l_rsc, s_id_txt, loc=False):
     out = []
     for ss, dis_list, distances in desc:
         for id_dis in dis_list:
@@ -95,10 +104,9 @@ def filter_desc(desc, l_rsc, loc=False):
                     #for country names the first character should not change
                     ratio = max(0, ratio-0.2)#penalty
                 else:
-                    if len(entity_name) < 6 and ratio < 1:
-                        ratio = max(0, ratio-0.1)#penalty
+                    ratio = max(0, ratio-0.1)#penalty
 
-            score = get_score(ratio, distances)
+            score = get_score(ratio, distances, s_id_txt)
             out.append([score, entity_name, ss, distances])
         # entity_name = list(map(lambda x: l_rsc[int(x)], dis_list))
         # test = list(map(lambda x: substring_score(x, ss, distances, loc), entity_name))
@@ -107,23 +115,23 @@ def filter_desc(desc, l_rsc, loc=False):
     return sorted(out,reverse=True)
 
 def get_desc(string, rsc, loc = False):
-    set_id_text = set()
+    s_id_txt = set()
     rstr = Rstr_max()
     cpt = 0
     l_rsc = list(rsc.keys())
 
     for s in string:
         rstr.add_str(s)
-        set_id_text.add(cpt)
+        s_id_txt.add(cpt)
         cpt+=1
 
     for r in l_rsc:
         rstr.add_str(r)
 
     r = rstr.go() # ???? should name different perhap
-    desc = exploit_rstr(r,rstr, set_id_text)
+    desc = exploit_rstr(r,rstr, s_id_txt)
 
-    return filter_desc(desc, l_rsc, loc)
+    return filter_desc(desc, l_rsc, s_id_txt, loc)
 
 def zoning(string, options):
     z = re.split("<p>", string)
@@ -145,12 +153,15 @@ def zoning(string, options):
         else:#No usable structure
             part = int(len(string)/3)
             z = [string[:part], string[part:part*2], string[part*2:]] 
+    elif options.language!="zh":
+      if len(re.findall("\.[ <]", z[1]))<2:#reorganize header
+        z = [z[0], z[1]+z[2]] + z[2:]
 
     if options.debug:
         for zone in z:
-            print (re.sub("\n", "--",zone[:70]))
+            print (re.sub("\n", "***",zone[:70]))
             print("")
-        d = raw_input("Zoning ended, proceed to next step ?")
+        d = input("Zoning ended, proceed to next step ?")
 
     return z
 
@@ -247,7 +258,14 @@ def get_resource(lg, o):
         if o.debug:
             print ("  Non mandatory resource '%s' not found"%path_towns)
         dic["towns"]={}
-
+##    improved_dic = {}#does not work with russian
+##    for key, val in dic["diseases"].items():
+##      if key.upper()==key:
+##        improved_dic[key] =val
+##      else:
+##        improved_dic[key.lower()] =val
+##        improved_dic[key.capitalize()] =val
+##    dic["diseases"]=improved_dic
     return dic
 
 def open_utf8(path):
@@ -273,25 +291,23 @@ def get_lg_JT(lg_iso):
     return lg
 
 def get_clean_html(o, lg_JT):
-    if o.is_clean:
+    if o.isnot_clean == False:
         return open_utf8(o.document_path)
 
     try:
         import justext
         text = open_utf8(o.document_path)
-        paragraphs = justext.justext(text, justext.get_stoplist(lg_JT))
-        out = ""
-
-        for paragraph in paragraphs:
-            if not paragraph.is_boilerplate:
-                out+="<p>%s</p>\n"%paragraph.text
+        pars = justext.justext(text, justext.get_stoplist(lg_JT))
+        out = "\n".join(["<p>%s</p>"%p.text for p in pars if not p.is_boilerplate])
 
         if o.verbose:
             print ("-> Document cleaned")
     except Exception as e:
         if o.verbose:
-            print (e)
-            print ("** Probably Justext is missing, do 'pip install justext'")
+            print ("\n** %s"%str(e))
+            print ("** may be 'pip install justext' will be needed")
+            print ("** otherwise remove the -i option\n")
+        exit()
 
         out = open_utf8(o.document_path)
 
@@ -337,6 +353,7 @@ def valid_result(result_size, largest_ratio, threshold_ratio):
 
 def print_final_result(options, results, descriptions):
     print (options.document_path)
+    if results =={}:return
     for info in ["dis_infos", "loc_infos"]:
         if len(results[info]) > 0:
             print (descriptions[info])

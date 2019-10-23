@@ -1,10 +1,9 @@
 import re
-import sys
+import sys, os
 import json
-import os
+from collections import Counter
 
 def get_dic(path):
-    print(path)
     f = open(path)
     dic = json.load(f)
     f.close()
@@ -22,6 +21,25 @@ def get_verdict(GT, EV):
         else:
             verdict = "TN"
     return verdict
+
+def store_errors(errors, infos, verdict,annot_GT, annot_eval):
+    lg = infos["language"]
+    if verdict=="FP":
+        errors[verdict].setdefault(lg, [])
+        errors[verdict][lg].append(annot_eval)
+    elif verdict=="FN":
+        errors[verdict].setdefault(lg, [])
+        errors[verdict][lg].append(annot_GT)      
+#      os.system("gedit %s"%infos["document_path"])
+#      dd = input("Next ?")
+    return errors
+
+def show_errors(errors):
+    for typ, dic in errors.items():
+        print("****\n-%s-\n****"%typ)
+        for lg, list_errors in dic.items():
+            err = Counter(["--".join(x[:1]) for x in list_errors])
+            print("-> %s"%lg, err.most_common(5))
 
 def get_measures(dic, beta=1):
     TP, FP, FN = dic["TP"], dic["FP"] , dic["FN"]

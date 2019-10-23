@@ -11,7 +11,7 @@ from rstr_max import *
 import os
 from tools import *
 
-def exploit_rstr(r,rstr, set_id_text):
+def exploit_rstr(r,rstr, s_id_txt):
   desc = []
   for (offset_end, nb), (l, start_plage) in r.iteritems():
     ss = rstr.global_suffix[offset_end-l:offset_end]
@@ -19,12 +19,12 @@ def exploit_rstr(r,rstr, set_id_text):
     for o in range(start_plage, start_plage+nb) :
       id_str = rstr.idxString[rstr.res[o]]
       s_occur.add(id_str)
-    inter = s_occur.intersection(set_id_text)
+    inter = s_occur.intersection(s_id_txt)
     if len(inter)>1 and len(s_occur)>len(inter):
-      NE_ids = [x-len(set_id_text) for x in s_occur.difference(set_id_text)]
+      NE_ids = [x-len(s_id_txt) for x in s_occur.difference(s_id_txt)]
       l_distances = []
       for d in inter:
-        l_distances.append(min(d, len(set_id_text)-d-1))
+        l_distances.append(min(d, len(s_id_txt)-d-1))
       desc.append([ss, NE_ids, sorted(l_distances)])
   return desc
 
@@ -32,7 +32,7 @@ def get_score(ratio, dist):
   score = pow(ratio, 1+dist[0]*dist[1])
   return score
 
-def filter_desc(desc, l_rsc, loc=False):
+def filter_desc(desc, l_rsc, s_id_txt, loc=False):
   out = []
   for ss, dis_list, distances in desc:
     for id_dis in dis_list:
@@ -48,19 +48,19 @@ def filter_desc(desc, l_rsc, loc=False):
   return sorted(out,reverse=True)
 
 def get_desc(string, rsc, loc = False):
-  set_id_text = set()
+  s_id_txt = set()
   rstr = Rstr_max()
   cpt = 0
   l_rsc = rsc.keys()
   for s in string:
     rstr.add_str(s)
-    set_id_text.add(cpt)
+    s_id_txt.add(cpt)
     cpt+=1
   for r in l_rsc:
     rstr.add_str(r)
   r = rstr.go()
-  desc = exploit_rstr(r,rstr, set_id_text)
-  res = filter_desc(desc, l_rsc, loc)
+  desc = exploit_rstr(r,rstr, s_id_txt)
+  res = filter_desc(desc, l_rsc, s_id_txt, loc)
   return res 
 
 def zoning(string):
@@ -120,8 +120,8 @@ def open_utf8(path):
   f.close()
   return string
 
-def get_clean_html(path, language, is_clean):
-  if is_clean == True:
+def get_clean_html(path, language, isnot_clean):
+  if isnot_clean == False:
     return open_utf8(path)
   try:
     tmp = "tmp/out"
@@ -135,7 +135,7 @@ def get_clean_html(path, language, is_clean):
   return out
   
 def process(o):
-  string = get_clean_html(o.document_path, o.language, o.is_clean)
+  string = get_clean_html(o.document_path, o.language, o.isnot_clean)
   ressource = get_ressource(o.language)
   results = analyze(string, ressource, o)
   return results

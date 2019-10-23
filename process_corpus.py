@@ -14,16 +14,16 @@ class Struct:
         self.__dict__.update(entries)
 
 # write result
-def write_output(output_dic, corpus_path):
-    output_path = "%s.results"%corpus_path
-    output_json = json.dumps(output_dic, sort_keys=True, indent=2)
-    with open(output_path, "w") as wfi:
-        wfi.write(output_json)
-    return output_path
+#def write_output(output_dic, corpus_path):
+#    output_path = "%s.results"%corpus_path
+#    output_json = json.dumps(output_dic, sort_keys=True, indent=2)
+#    with open(output_path, "w") as wfi:
+#        wfi.write(output_json)
+#    return output_path
 
 def prepare_infos(infos, options):
     infos["document_path"] = check_abs_path(infos["document_path"], options.corpus)
-    attr = ["is_clean","ratio","verbose","debug","name_out","showrelevant"]
+    attr = ["isnot_clean","ratio","verbose","debug","name_out","showrelevant"]
     for name in attr:
         infos[name] = getattr(options, name)
     return infos 
@@ -51,13 +51,19 @@ def check_abs_path(doc_path, corpus_path):
 
 def start_detection(options):
     corpus_to_process = json.load(open(options.corpus))
+    if options.language!="all":
+      corpus_to_process = {x:infos for x,infos in corpus_to_process.items() if infos["language"]==options.language}
     cpt_proc, cpt_rel = 0, 0
     output_dic, resources = {}, {}
     missing_docs = []
   
     print ("\n Processing %s documents\n"%str(len(corpus_to_process)))
   
-    for id_file, infos in corpus_to_process.items():  
+    for id_file, infos in corpus_to_process.items(): 
+
+        if options.verbose:
+            print("\n\n", infos)
+
         infos = prepare_infos(infos, options)
         
         doc_data = Struct(**infos)
@@ -71,9 +77,6 @@ def start_detection(options):
     
         if "annotations" in output_dic[id_file]:
             del output_dic[id_file]["annotations"]# for evaluation
-    
-        if options.verbose:
-            print (infos)
         
         lg = doc_data.language
 
@@ -89,12 +92,13 @@ def start_detection(options):
             cpt_rel += 1
     
         output_dic[id_file]["annotations"] = results["events"]
-        output_dic[id_file]["is_clean"] = str(output_dic[id_file]["is_clean"])
+        output_dic[id_file]["isnot_clean"] = str(output_dic[id_file]["isnot_clean"])
 
         if cpt_proc%100 == 0:
-            print ("%s documents processed, %s relevant"%(str(cpt_proc), str(cpt_rel)))
+          sys.stdout.write("\r%i processed, %i relevant"%(cpt_proc, cpt_rel))
+          #sys.stdout.flush() # if the buffer gets big, which is not the case
     
-    output_path = write_output(output_dic, options.corpus)
+    output_path = write_output(output_dic, options)
 
     list_docs_not_found(missing_docs) 
 
@@ -115,7 +119,7 @@ if __name__=="__main__":
         pass
     cpt_doc, cpt_rel, output_path = start_detection(options)
     end = time.clock()
-    print ("%s docs proc. in %s seconds"%(str(cpt_doc), str(round(end-start, 4))))
+    print ("\n%s docs proc. in %s seconds"%(str(cpt_doc), str(round(end-start, 4))))
     print ("  %s relevant documents"%(str(cpt_rel)))
     print ("  Results written in %s"%output_path)
     if options.evaluate:
