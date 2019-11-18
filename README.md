@@ -21,7 +21,7 @@ DAniEL can be used to check a single file or to handle big corpus
 
 ### Testing a single file
 
-    python3 daniel.py -l LANGUAGE_ID -d DOCUMENT_PATH
+    python3 daniel.py -l LANGUAGE_ID -d PATH_TO_DOCUMENT -v
 
 ### Processing a corpus
 
@@ -31,10 +31,21 @@ DAniEL can be used to check a single file or to handle big corpus
 
     python3 evaluate.py PATH_TO_GROUNDTRUTH PATH_TO_RESULT_FILE
 
-or simple add "-e" before processing the corpus
+or simply adding "-e" before running process_corpus.py will do
 
 ## Annotating Guide
 
+The corpus is annotated using JSON format. It's basically a dictionary where the key is the document's ID. The value corresponding to a key is as follow:
+- Mandatory Value:
+    * Document's Path
+- Useful Value:
+    * Document's Source
+    * Language
+    * URL
+    * Comment
+- Annotation:
+    * Pair Value of [Disease Name, Location]
+Example can be found in docs/Indonesian_GL.json
 
 # Dataset
 
