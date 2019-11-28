@@ -52,4 +52,4 @@ Example can be found in docs/Indonesian_GL.json
 
 To the best of found knowledge, there is no public corpus that has both DAniEL-compatible annotations and OCR noise. The available corpora only have either annotations that work with DAniEL nor noisy text that were generated during OCR process. To deal with this problem, we built a noisy dataset based on previously-available DAniEL corpora.
 
-The dataset can be found here(to be updated), including both the degraded images and the noisy text extracted using OCR. There are 6 languages in this corpus: English, French, Russian, Polish, Chinese and Greek.
+The dataset can be found [here](https://1drv.ms/u/s!At3pWQFublT-vEDzFSvaW0qCevjk?e=RLCfym), including both the degraded images and the noisy text extracted using OCR, with 2 noise types: Character Degradation and Phantom Character. There are 6 languages in this corpus: English, French, Russian, Polish, Chinese and Greek.
