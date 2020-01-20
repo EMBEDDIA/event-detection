@@ -2,15 +2,12 @@
 # -*- coding: utf-8 -*-
 import time
 import json
-from tools import *
-from rstr_max import *
-from tools_karkkainen_sanders import *
+from tools import get_args
+from rstr_max import Rstr_max
 import codecs
 import sys
 import os
 import re
-import glob
-import math
 sys.path.append('./rstr_max')
 
 # Maybe a bottle neck
@@ -170,7 +167,7 @@ def zoning(string, options):
         for zone in z:
             print(re.sub("\n", "***", zone[:70]))
             print("")
-        d = input("Zoning ended, proceed to next step ?")
+#        d = input("Zoning ended, proceed to next step ?")
 
     return z
 
@@ -404,7 +401,7 @@ def get_final_result(results, ratio):
 
 
 def process_results(results, options):
-    ratio = float(options.ratio)
+    #    ratio = float(options.ratio)
     descriptions = eval(open_utf8("resources/descriptions.json"))
 
     if options.debug:
