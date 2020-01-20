@@ -3,12 +3,11 @@
 import time
 import json
 from tools import get_args
-from rstr_max import Rstr_max
+from rstr_max.rstr_max import Rstr_max
 import codecs
-import sys
 import os
 import re
-sys.path.append('./rstr_max')
+#sys.path.append('./rstr_max')
 
 # Maybe a bottle neck
 # normalizes the distance between the substring and the closest end of the text

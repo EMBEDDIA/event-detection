@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
-import os
-import re
+import sys, os, re
 
 f = open(sys.argv[1])
 lignes = f.readlines()

@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from tools import get_args
-from rstr_max import Rstr_max
+from rstr_max.rstr_max import Rstr_max
 import codecs
-import sys
 import os
 import re
-sys.path.append('./rstr_max')
 
 
 def exploit_rstr(r, rstr, s_id_txt):
