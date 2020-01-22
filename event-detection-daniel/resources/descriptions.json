@@ -1,0 +1,5 @@
+{
+  "events":"events(What, Where)",
+  "loc_infos":"Where(Confidence, Named Entity, Substring, Positions)",
+  "dis_infos":"What(Confidence, Named Entity, Substring, Positions)"
+}
