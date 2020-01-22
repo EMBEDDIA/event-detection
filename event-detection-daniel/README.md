@@ -1,10 +1,12 @@
+Daniel System (forked from https://github.com/rundimeco/daniel)
+
 # Event Detection
 
 In Natural Language Processing, an event denotes a change in states and is usually described by a set of participants(i.e. attributes, roles) doing actions. With each event comes an event trigger(s) which can be seen as what invokes the event. These triggers more than often can be seen in the form of verbs and nouns, while sometimes can be expressed through adverbs and pronouns. 
 
 Identifying event triggers and classifying them into their respective categories are called Event Detection. It's a challenging subtask of Event Extraction since 1 event can have multiple forms of event triggers, and vice versa, the same event trigger might lead to different events depending on the context.
 
-# Data Analysis for Information Extraction in any Languages (DAniEL)
+# DAniEL (Data Analysis for Information Extraction in any Languages)
 
 In the context of the NewsEye project where many languages are considered, the DAniEL system, created by Gael Lejeurn, was chosen. The system focuses on Epidemic Surveillance over press articles across multiple languages. Rather depending on language-specific grammars and analyzers, the system implements a string-based algorithm that detects repeated maximal substrings in salient zones to extract important information (disease name, location). The decision of choosing prominent text zones is based on the characteristics of a journalistic writing style where crucial information is usually put at the beginning and end of the article.
 
@@ -13,7 +15,7 @@ This is the Python 3 version of the Daniel System (originally from here: https:/
 ## Prerequisites
 
 * Python3.x (we are currently using version 3.7)
-* Justtext Python module (for cleaning up HTML boilerplates if needed)
+* pip install justext Justtext Python module (for cleaning up HTML boilerplates if needed)
 
 ## Usage
 
@@ -21,15 +23,15 @@ DAniEL can be used to check a single file or to handle big corpus
 
 ### Testing a single file
 
-    python3 daniel.py -l LANGUAGE_ID -d PATH_TO_DOCUMENT -v
+    python daniel.py -l LANGUAGE_ID -d PATH_TO_DOCUMENT -v
 
 ### Processing a corpus
 
-    python3 process_corpus.py -c PATH_TO_CORPUS_FILE [-r RATIO] 
+    python process_corpus.py -c PATH_TO_CORPUS_FILE [-r RATIO] 
 
 ### Evaluate the Result of corpus processing
 
-    python3 evaluate.py PATH_TO_GROUNDTRUTH PATH_TO_RESULT_FILE
+    python evaluate.py PATH_TO_GROUNDTRUTH PATH_TO_RESULT_FILE
 
 or simply adding "-e" before running process_corpus.py will do
 
