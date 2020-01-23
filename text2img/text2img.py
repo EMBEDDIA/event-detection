@@ -9,7 +9,6 @@ import os
 import re
 import sys
 import codecs
-import subprocess
 
 
 def output_content(content, output_file, writing_type='w+'):
@@ -45,12 +44,10 @@ def txt_to_img(input_file, output_file):
     command.append('caption:"' + text + '"')
     command.append(output_file)
 
-    stream = os.popen(' '.join(command))
-    output = stream.read()
-#    print(output)
-#    output
+    os.popen(' '.join(command))
+#    stream.read()
 
-#    import pdb;pdb.set_trace()
+#TODO: subprocess too slow
 #    p = subprocess.Popen(command, stdout=subprocess.PIPE)
 #    output, error = p.communicate()
 #    print(output)
@@ -63,10 +60,10 @@ def walk_through_dir(in_dir, out_dir, convert_func):
     for dir_path, dir_names, file_names in os.walk(in_dir):
         if len(dir_names) > 0:
             for dir_name in dir_names:
-                sub_out_dir = os.path.join(out_dir, dir_path, dir_name)
+                sub_out_dir = os.path.join(out_dir, dir_path.replace('/'.join(in_dir.split('/')[:-1]), '')[1:], dir_name)
                 create_dir(sub_out_dir)
         else:
-            sub_out_dir = os.path.join(out_dir, os.path.basename(dir_path))
+            sub_out_dir = os.path.join(out_dir, dir_path.replace('/'.join(in_dir.split('/')[:-1]), '')[1:])
             convert_files(dir_path, sub_out_dir, convert_func)
 
 
