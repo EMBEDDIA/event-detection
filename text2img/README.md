@@ -2,9 +2,10 @@ Project forked from https://github.com/nnkhoa/text2ImgDoc. Modified to support U
 
 # Text To Image Documents script
 
-Requirement: ImageMagick 
+Requirements: ImageMagick 
 
-Instruction: 
+### How to run: 
+
 ```python txt2ImgDoc.py $DATA_FOLDER```
 
 ```$DATA_FOLDER``` is the directory containing all of the text files as well as sub-directories (two or more levels of sub-folder may cause crashes. It's best to not have any sub-directory at all).
