@@ -6,9 +6,9 @@ Requirements: ImageMagick
 
 ### How to run: 
 
-```python txt2ImgDoc.py $DATA_FOLDER```
+```python text2img.py DATA_FOLDER```
 
-```$DATA_FOLDER``` is the directory containing all of the text files as well as sub-directories (two or more levels of sub-folder may cause crashes. It's best to not have any sub-directory at all).
+```DATA_FOLDER``` is the directory containing all of the text files as well as sub-directories (two or more levels of sub-folder may cause crashes. It's best to not have any sub-directory at all).
 
 This will create two new folders: One containing the clean text file without any Html tags, the other having all of the text files converted into images.
 
