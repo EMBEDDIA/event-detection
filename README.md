@@ -1,8 +1,5 @@
 # Event Detection
 
-In Natural Language Processing, an event denotes a change in states and is usually described by a set of participants(i.e. attributes, roles) doing actions. With each event comes an event trigger(s) which can be seen as what invokes the event. These triggers more than often can be seen in the form of verbs and nouns, while sometimes can be expressed through adverbs and pronouns. 
-
-Identifying event triggers and classifying them into their respective categories are called Event Detection. It's a challenging subtask of Event Extraction since 1 event can have multiple forms of event triggers, and vice versa, the same event trigger might lead to different events depending on the context.
 
 ### DAniEL (Data Analysis for Information Extraction in any Languages): event-detection-daniel
 
