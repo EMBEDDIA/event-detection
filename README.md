@@ -10,6 +10,6 @@ In the context of the NewsEye project where many languages are considered, the D
 
 This is the Python 3 version of the Daniel System (originally from here: https://github.com/rundimeco/daniel)
 
-### Convolutional Neural Network model for event detection: event-detection-daniel
+### Convolutional Neural Network model for event detection: event-detection-pytorch
 
 
