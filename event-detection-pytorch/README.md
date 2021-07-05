@@ -36,7 +36,7 @@ python extract_data.py --train data/train.txt --test data/test.txt --valid data/
 
 ```python
 cd ../
-python train.py --directory data/ --train data/train_ace.txt --test data/test_ace.txt --valid data/valid_ace.txt --embeddings glove  --generate_data
+python train.py --directory data/ --train data/train.txt --test data/test.txt --valid data/valid.txt --embeddings glove  --generate_data
 
 --embeddings: [google, glove, fasttext, numberbatch]
 --models: [CNN2015, CNN2018, CNN2019, attention]
