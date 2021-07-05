@@ -9,4 +9,4 @@ This is the Python 3 version of the Daniel System (originally from here: https:/
 
 ### Convolutional Neural Network model for event detection: event-detection-pytorch
 
-
+Neural Methods for Event Extraction https://tel.archives-ouvertes.fr/tel-01943841/document
