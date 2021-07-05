@@ -1,13 +1,5 @@
 ## ACE2005 Event Detection
 
-The models available in this repository are:
-* the baseline model: *Event detection and domain adaptation with convolutional neural networks.*, Nguyen, Thien Huu, and Ralph Grishman, 2015
-* the baseline model with character embeddings___
-
-Warning: the batch_size hyperparameter is very important! The best results are obtained with 128. Every other value will give lower results.
-___
-
-
 ### Requirements
 
 Preferably Anaconda, https://repo.continuum.io/, Python 3.x and an environment: 
