@@ -25,10 +25,17 @@ which installs the requirements and downloads models for SpaCy and data resource
 
 ### Pre-process data for trigger detection
 
+#### Data format:
+
+```
+CNN_CF_20030303.1900.00	None	None	-1	Apparently, Mr. Bush only turns to professionals when it's really important, like political consulting.	None	[]
+CNN_CF_20030303.1900.00	Personnel	Elect	1	Paul, as I understand your definition of a political -- of a professional politician based on that is somebody who is elected to public office.	elected	[('elected', 'Elect', '1258,1264', 'EVENT')]
+```
+
 The embeddings will be automatically downloaded, in the same manner as NLTK does.
 
 ```python
-python extract_data.py --embeddings google
+python extract_data.py --train data/train.txt --test data/test.txt --valid data/valid.txt --embeddings glove --output_directory data/processed/
 
 --embeddings: [google, glove, fasttext, numberbatch]
 ```
