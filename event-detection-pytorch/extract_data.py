@@ -171,7 +171,7 @@ def prepare_dataset(file,
 
         data = []
 
-        logger.info(str(len(pd.unique(df.sent))) + ' sentences')
+        logger.info(str(len(df)) + ' sentences')
 
         for index, line in tqdm(df.iterrows(), total=len(df)):
             sentence = line.sent
@@ -244,7 +244,7 @@ def prepare_dataset(file,
                 take_sentence = True
                 if len(anchors) > 0:
                     check_existing.append(sentence)
-                    print(anchors)
+#                    print(anchors)
 
                 doc = nlp(sentence)
 
@@ -323,9 +323,6 @@ def prepare_dataset(file,
                         how_many_times = 1
 
                         if target_word in anchors:
-
-                            #                            if "Le diagnostic de l'OMS contredit les prop" in sentence:
-                            #                                import pdb;pdb.set_trace()
                             if target_word in anchors_indexes:
                                 if isinstance(
                                         anchors_indexes[target_word], list):
@@ -361,8 +358,8 @@ def prepare_dataset(file,
                                 target_word)) + ',' + str(sentence.index(target_word) + len(target_word))
 
                         windows = [(label, tokenIds)]
-                        if label not in ['Other']:
-                            print(target_word, '--', language)
+#                        if label not in ['Other']:
+#                            print(target_word, '--', language)
 #                        print(details_event[2])
 #                        if '60,68' in str(details_event[2]):
 #                            print(details_event)
