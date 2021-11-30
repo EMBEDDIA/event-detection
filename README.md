@@ -10,3 +10,11 @@ This is the Python 3 version of the Daniel System (originally from here: https:/
 ### Convolutional Neural Network model for event detection: event-detection-pytorch
 
 Neural Methods for Event Extraction https://tel.archives-ouvertes.fr/tel-01943841/document
+
+### Event detection as question answering: event-detection-qa
+
+Event Detection as Question Answering with Entity Information https://arxiv.org/pdf/2104.06969.pdf
+
+### Event detection with entities: event-detection-entities
+
+http://embeddia.eu/wp-content/uploads/ECIR_2021_Boros-et-al.pdf
