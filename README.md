@@ -18,3 +18,6 @@ Event Detection as Question Answering with Entity Information https://arxiv.org/
 ### Event detection with entities: event-detection-entities
 
 http://embeddia.eu/wp-content/uploads/ECIR_2021_Boros-et-al.pdf
+
+### Pre-process ACE2005 for entities and qa: ace2005-preprocessing
+
